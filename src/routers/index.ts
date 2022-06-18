@@ -3,13 +3,15 @@ import morgan from "morgan"
 
 import { errorHandler } from "../middlewares/error-handler.middleware"
 import authRouter from "./auth.router"
+import EpisodesRouter from "./episode.router"
 import showRouter from "./show.router"
 import userRouter from "./user.router"
 
 const routes = [
   showRouter,
   authRouter,
-  userRouter
+  userRouter,
+  EpisodesRouter
 ]
 
 function startRoutes (app: Application) {
