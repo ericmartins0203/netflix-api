@@ -1,21 +1,17 @@
-import { NextFunction, Request, Response } from "express"
-import { CustomError } from "../utils/errorHandler.util"
+import { NextFunction, Request } from "express"
+import HTTP_STATUS from "../enums/http-status.enums"
+import HttpException from "../exceptions/http.exception"
+import { CustomResponse } from "../interfaces/custom-response.interface"
 
-function handleError (
-  err: TypeError | CustomError,
-  req: Request,
-  res: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  next: NextFunction
-) {
-  let customError = err
-
-  if (!(err instanceof CustomError)) {
-    customError = new CustomError(
-      'Oh no, this is embarrasing. We are having troubles my friend'
-    )
-  }
-  res.status((customError as CustomError).status).send(customError)
+export const errorHandler = (req: Request, res: CustomResponse, next: NextFunction) => {
+  res.errorHandler = (e: any) => {
+    if (e instanceof HttpException) {
+      res
+      .status(e.status)
+      .json({ error: true, message: e.message, details: e })
+    } else {
+      res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: true })
+    }
 }
-
-export default handleError
+  next()
+}

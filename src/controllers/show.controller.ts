@@ -1,45 +1,52 @@
-import { Request, Response } from "express"
+import { Request } from "express"
+
 import HTTP_STATUS from "../enums/http-status.enums"
+import { CustomResponse } from "../interfaces/custom-response.interface"
 import { ShowService } from "../services"
 
 const showService = new ShowService()
 
 class ShowController {
-  public static async list (request: Request, response: Response) {
-    const shows = await showService.list()
-
-    response.send(shows)
-  }
-
-  public static async listOne (request: Request, response: Response) {
-    const { id } = request.params
-
-    const show = await showService.listOne(Number(id))
-
-    if (show) {
-      response.json(show)
+  public static async list (request: Request, response: CustomResponse) {
+    try {
+      const shows = await showService.list()
+      response.send(shows)
+    } catch (e) {
+      response.errorHandler && response.errorHandler(e)
     }
-
-    return response.status(HTTP_STATUS.NOT_FOUND).json(`Show ${id} not found`)
   }
 
-  public static async create (request: Request, response: Response) {
-    const show = request.body
+  public static async listOne (request: Request, response: CustomResponse) {
+    try {
+      const { params: { id } } = request
+      const shows = await showService.listOne(+id)
 
-    const createdShow = await showService.create(show)
-
-    response.status(HTTP_STATUS.CREATED).json(createdShow)
+      response.json(shows)
+    } catch (e) {
+      response.errorHandler && response.errorHandler(e)
+    }
   }
 
-  public static async delete (request: Request, response: Response) {
-  try {
-      const { id } = request.params
+  public static async create (request: Request, response: CustomResponse) {
+    try {
+      const shows = request.body
 
-      await showService.delete(+id)
+      const result = await showService.create(shows)
 
-      response.status(HTTP_STATUS.NO_CONTENT).json()
-    } catch (e:any) {
-      response.status(e.status).json(e.message)
+      response.status(HTTP_STATUS.CREATED).json(result)
+    } catch (e) {
+      response.errorHandler && response.errorHandler(e)
+    }
+  }
+
+  public static async delete (request: Request, response: CustomResponse) {
+    try {
+      const { params: { id } } = request
+      const shows = await showService.delete(+id)
+
+      response.json(shows)
+    } catch (e) {
+      response.errorHandler && response.errorHandler(e)
     }
   }
 }

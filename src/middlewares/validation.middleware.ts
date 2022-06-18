@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from "express"
+import { NextFunction, Request } from "express"
 import { Schema } from "joi"
 
-import HTTP_STATUS from "../enums/http-status.enums"
+import { CustomResponse } from "../interfaces/custom-response.interface"
 
-const validationMiddleware = (schema: Schema) => async (req: Request, res: Response, next: NextFunction) => {
+const validationMiddleware = (schema: Schema) => async (req: Request, res: CustomResponse, next: NextFunction) => {
   try {
     await schema.validateAsync(req.body, {
       abortEarly: false,
@@ -12,7 +12,8 @@ const validationMiddleware = (schema: Schema) => async (req: Request, res: Respo
 
     return next()
   } catch (e: any) {
-    res.status(HTTP_STATUS.BAD_REQUEST).json({ error: true, message: e.message })
+    // res.status(HTTP_STATUS.BAD_REQUEST).json({ error: true, message: e.message })
+    res.errorHandler && res.errorHandler(e)
   }
 }
 
