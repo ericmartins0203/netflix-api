@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import express from 'express'
 
-import databaseInitialize from './configs/database/data-source'
+import databaseInitialize from './src/database/data-source'
 import startRoutes from './src/routers'
 
 const app: express.Application = express()

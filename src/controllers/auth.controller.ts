@@ -1,5 +1,5 @@
 import { Request } from "express"
-import { CustomResponse } from "../interfaces/custom-response.interface"
+import { CustomResponse } from "../interfaces"
 import { AuthService } from "../services"
 
 const authService = new AuthService()

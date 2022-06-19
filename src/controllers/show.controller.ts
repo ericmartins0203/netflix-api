@@ -1,7 +1,7 @@
 import { Request } from "express"
 
 import HTTP_STATUS from "../enums/http-status.enums"
-import { CustomResponse } from "../interfaces/custom-response.interface"
+import { CustomResponse } from "../interfaces"
 import { ShowService } from "../services"
 
 const showService = new ShowService()
@@ -10,9 +10,9 @@ class ShowController {
   public static async list (request: Request, response: CustomResponse) {
     try {
       const shows = await showService.list()
-      response.send(shows)
+      return response.send(shows)
     } catch (e) {
-      response.errorHandler && response.errorHandler(e)
+      return response.errorHandler && response.errorHandler(e)
     }
   }
 
@@ -21,7 +21,7 @@ class ShowController {
       const { params: { id } } = request
       const shows = await showService.listOne(+id)
 
-      response.json(shows)
+      return response.json(shows)
     } catch (e) {
       response.errorHandler && response.errorHandler(e)
     }
@@ -33,9 +33,9 @@ class ShowController {
 
       const result = await showService.create(shows)
 
-      response.status(HTTP_STATUS.CREATED).json(result)
+      return response.status(HTTP_STATUS.CREATED).json(result)
     } catch (e) {
-      response.errorHandler && response.errorHandler(e)
+      return response.errorHandler && response.errorHandler(e)
     }
   }
 

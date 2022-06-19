@@ -1,5 +1,5 @@
 import { Repository } from "typeorm"
-import { AppDataSource } from "../../configs/database/data-source"
+import { AppDataSource } from "../database/data-source"
 import { Episode, Show } from "../entities"
 import { BadRequestException } from "../exceptions"
 

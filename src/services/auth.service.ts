@@ -28,11 +28,13 @@ class AuthService {
         throw new UnauthorizedException()
       }
 
+      const secret = process.env.SECRET_KEY || 'secret'
+
       const token = jwt.sign({
-        sub: user.id,
+        sub: user.email,
         iat: Date.now(),
         email: user.email
-      }, "ABCBANANA")
+      }, secret)
 
       return {
         token

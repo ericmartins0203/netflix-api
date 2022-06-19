@@ -1,10 +1,12 @@
 import express from 'express'
+
 import { EpisodeController } from '../controllers'
+import validateAuthToken from '../middlewares/validate-token.middleware'
 import validationMiddleware from '../middlewares/validation.middleware'
 import { CreateEpisode } from '../schemas'
 
-const EpisodesRouter = express.Router()
+const episodesRouter = express.Router()
 
-EpisodesRouter.post('/episodes', validationMiddleware(CreateEpisode), EpisodeController.create)
+episodesRouter.post('/episodes', validateAuthToken, validationMiddleware(CreateEpisode), EpisodeController.create)
 
-export default EpisodesRouter
+export default episodesRouter

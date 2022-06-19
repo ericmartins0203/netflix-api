@@ -1,7 +1,7 @@
 import { Request } from "express"
 
 import HTTP_STATUS from "../enums/http-status.enums"
-import { CustomResponse } from "../interfaces/custom-response.interface"
+import { CustomResponse } from "../interfaces"
 import { EpisodeService } from "../services"
 
 const episodeService = new EpisodeService()
@@ -17,7 +17,7 @@ class EpisodeController {
       .status(HTTP_STATUS.CREATED)
       .json({ createEpisode })
     } catch (e) {
-    res.errorHandler && res.errorHandler(e)
+    return res.errorHandler && res.errorHandler(e)
   }
   }
 }

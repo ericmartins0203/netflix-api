@@ -1,5 +1,7 @@
 import { Response } from "express"
 
-export interface CustomResponse extends Response {
+interface CustomResponse extends Response {
   errorHandler?: Function
 }
+
+export default CustomResponse

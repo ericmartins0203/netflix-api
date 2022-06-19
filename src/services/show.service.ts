@@ -1,6 +1,6 @@
 import { Repository } from "typeorm"
 
-import { AppDataSource } from "../../configs/database/data-source"
+import { AppDataSource } from "../database/data-source"
 import { Show } from "../entities"
 import NotFoundException from "../exceptions/not-found.exception"
 
@@ -18,8 +18,8 @@ class ShowService {
    *
    * @beta
    */
-  async list (): Promise<Show[]> {
-    return await this.showRepository.find()
+  list (): Promise<Show[]> {
+    return this.showRepository.find()
   }
 
   /**
@@ -34,10 +34,12 @@ class ShowService {
     const show = await this.showRepository.findOne({ where: { id } })
 
     if (show) {
+      console.log(show)
       return show
     }
+    console.log('out')
 
-    throw new NotFoundException(`O show id: ${id} não foi encontrado`)
+    throw new NotFoundException(`The show id: ${id} not found`)
   }
 
   /**
@@ -46,8 +48,8 @@ class ShowService {
    * @returns O show criado
    *
    */
-  async create (show: Show) : Promise<Show> {
-    return await this.showRepository.save(show)
+  create (show: Show) : Promise<Show> {
+    return this.showRepository.save(show)
   }
 
   /**
