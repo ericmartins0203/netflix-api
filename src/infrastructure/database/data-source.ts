@@ -4,9 +4,9 @@ export const AppDataSource = new DataSource({
   type: 'mysql',
   host: 'localhost',
   port: 3306,
-  username: 'root',
-  password: 'abcbanana',
-  database: 'netflix',
+  username: process.env.USERNAME,
+  password: process.env.SECRET_KEY,
+  database: process.env.DATABASE_NAME,
   entities: ['src/entities/*.entity.ts'],
   synchronize: true
 })
