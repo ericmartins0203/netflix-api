@@ -1,6 +1,6 @@
 import { Repository } from "typeorm"
 
-import { AppDataSource } from "../database/data-source"
+import { AppDataSource } from "../infrastructure/database/data-source"
 import { Show } from "../entities"
 import NotFoundException from "../exceptions/not-found.exception"
 

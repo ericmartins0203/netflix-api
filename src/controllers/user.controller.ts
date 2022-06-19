@@ -1,9 +1,11 @@
 import { Request } from "express"
 import HTTP_STATUS from "../enums/http-status.enums"
+import logger from "../infrastructure/logger/logger"
 import { CustomRequest, CustomResponse } from "../interfaces"
 import { UserService } from "../services"
 
 const userService = new UserService()
+const winstonLogger = logger({ controller: "UserController" })
 
 class UserController {
   public static async create (request: Request, response: CustomResponse) {
@@ -25,7 +27,8 @@ class UserController {
 
       response.status(HTTP_STATUS.CREATED).json({ email })
     } catch (e) {
-      console.log(' Fail to return user email', JSON.stringify(request.decoded))
+      winstonLogger.error(' Fail to return user email', JSON.stringify(request.decoded))
+
       response.errorHandler && response.errorHandler(e)
     }
   }

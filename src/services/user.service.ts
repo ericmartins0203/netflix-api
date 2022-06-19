@@ -2,7 +2,7 @@ import bcrypt from "bcrypt"
 import { Repository } from "typeorm"
 
 import User from "../entities/user.entity"
-import { AppDataSource } from "../database/data-source"
+import { AppDataSource } from "../infrastructure/database/data-source"
 import { BadRequestException } from "../exceptions"
 
 interface CreateUserDTO {
