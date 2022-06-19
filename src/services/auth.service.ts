@@ -29,11 +29,13 @@ class AuthService {
       }
 
       const secret = process.env.SECRET_KEY || 'secret'
+      const expiresIn = process.env.EXPIRES_IN || '4h'
 
       const token = jwt.sign({
         sub: user.email,
         iat: Date.now(),
-        email: user.email
+        email: user.email,
+        exp: expiresIn
       }, secret)
 
       return {

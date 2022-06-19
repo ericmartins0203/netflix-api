@@ -1,10 +1,12 @@
 import { Request } from "express"
 
 import HTTP_STATUS from "../enums/http-status.enums"
+import logger from "../infrastructure/logger/logger"
 import { CustomResponse } from "../interfaces"
 import { ShowService } from "../services"
 
 const showService = new ShowService()
+const winstonLogger = logger({ controller: "ShowController" })
 
 class ShowController {
   public static async list (request: Request, response: CustomResponse) {
@@ -12,6 +14,7 @@ class ShowController {
       const shows = await showService.list()
       return response.send(shows)
     } catch (e) {
+      winstonLogger.error(' Fail to list shows')
       return response.errorHandler && response.errorHandler(e)
     }
   }
@@ -23,6 +26,7 @@ class ShowController {
 
       return response.json(shows)
     } catch (e) {
+      winstonLogger.error(' Fail to list shows: ', JSON.stringify(request.params.id))
       response.errorHandler && response.errorHandler(e)
     }
   }
@@ -35,6 +39,7 @@ class ShowController {
 
       return response.status(HTTP_STATUS.CREATED).json(result)
     } catch (e) {
+      winstonLogger.error(' Fail to create shows: ', JSON.stringify(request.body))
       return response.errorHandler && response.errorHandler(e)
     }
   }
@@ -46,6 +51,7 @@ class ShowController {
 
       response.json(shows)
     } catch (e) {
+      winstonLogger.error(' Fail to delete shows: ', JSON.stringify(request.params.id))
       response.errorHandler && response.errorHandler(e)
     }
   }

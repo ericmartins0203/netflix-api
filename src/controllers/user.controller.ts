@@ -16,7 +16,7 @@ class UserController {
 
       response.status(HTTP_STATUS.CREATED).json({ id: user.id, email: user.email })
     } catch (e) {
-      console.log(' Fail to create user: ', JSON.stringify(body.email))
+      winstonLogger.error(' Fail to create user: ', JSON.stringify(body.email))
       response.errorHandler && response.errorHandler(e)
     }
   }

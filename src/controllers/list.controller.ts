@@ -1,9 +1,11 @@
 import { UnauthorizedException } from "../exceptions"
+import logger from "../infrastructure/logger/logger"
 import { CustomRequest, CustomResponse } from "../interfaces"
 import { ListService, UserService } from "../services"
 
 const userService = new UserService()
 const listService = new ListService()
+const winstonLogger = logger({ controller: "ListController" })
 
 class ListController {
   public static async list (req: CustomRequest, res: CustomResponse) {
@@ -13,6 +15,7 @@ class ListController {
       const user = await userService.getUserByEmail(email as string)
 
       if (!user) {
+        winstonLogger.error(' Fail to return list : ', JSON.stringify(req.decoded))
         throw new UnauthorizedException()
       }
 
@@ -45,7 +48,7 @@ class ListController {
 
       return res.json(added)
     } catch (e) {
-      console.log(`Fail to add show: ${JSON.stringify(req.decoded)}`)
+      winstonLogger.error(`Fail to add show: ${JSON.stringify(req.decoded)}`)
 
       return res.errorHandler && res.errorHandler(e)
     }
@@ -70,7 +73,7 @@ class ListController {
 
       return res.json(removed)
     } catch (e) {
-      console.log(`Fail to remove show: ${JSON.stringify(req.decoded)}`)
+      winstonLogger.error(`Fail to remove show: ${JSON.stringify(req.decoded)}`)
 
       return res.errorHandler && res.errorHandler(e)
     }

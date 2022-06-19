@@ -10,8 +10,6 @@ const validationMiddleware = (schema: Schema) => async (req: Request, res: Custo
       abortEarly: false
     })
 
-    console.log(validated)
-
     if (validated.error) {
       throw new ValidationException("Campos inválidos", validated.error?.details)
     }

@@ -5,7 +5,7 @@ import express from 'express'
 import databaseInitialize from './src/infrastructure/database/data-source'
 import startRoutes from './src/routers'
 
-const app: express.Application = express()
+export const app: express.Application = express()
 
 const PORT = process.env.PORT || 3000
 
