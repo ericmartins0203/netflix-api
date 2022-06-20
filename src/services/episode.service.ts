@@ -1,5 +1,6 @@
 import { Repository } from "typeorm"
-import { AppDataSource } from "../database/data-source"
+
+import { AppDataSource } from "../infrastructure/database/data-source"
 import { Episode, Show } from "../entities"
 import { BadRequestException } from "../exceptions"
 
@@ -22,6 +23,12 @@ class EpisodeService {
       throw new BadRequestException(`Show with id ${showId} not found`)
     }
 
+    const alreadyExists = await this.episodeRepository.findOne({ where: { title: episode.title } })
+
+    if (alreadyExists) {
+      throw new BadRequestException(`Episode with title ${episode.title} already exists`)
+    }
+
     const createEpisode = await this.episodeRepository.save(episode)
 
     show.episodes = [...show.episodes, createEpisode]
@@ -29,6 +36,16 @@ class EpisodeService {
     await this.showRepository.save(show)
 
     return createEpisode
+  }
+
+  async episodes (showId: number): Promise<Episode[]> {
+    const show = await this.showRepository.findOne({ where: { id: showId } })
+
+    if (!show) {
+      throw new BadRequestException(`Show with id ${showId} not found`)
+    }
+
+    return show.episodes
   }
 }
 

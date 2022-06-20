@@ -29,12 +29,15 @@ class AuthService {
       }
 
       const secret = process.env.SECRET_KEY || 'secret'
+      const expiresIn = process.env.EXPIRES_IN || '4h'
 
-      const token = jwt.sign({
-        sub: user.email,
-        iat: Date.now(),
-        email: user.email
-      }, secret)
+      const token = jwt.sign(
+        { email: user.email },
+        secret,
+        {
+          expiresIn
+        }
+      )
 
       return {
         token
