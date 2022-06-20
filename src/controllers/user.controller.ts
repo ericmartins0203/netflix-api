@@ -25,7 +25,9 @@ class UserController {
     try {
       const email = request.decoded
 
-      response.status(HTTP_STATUS.CREATED).json({ email })
+      const user = await userService.getUserByEmail(email as string)
+
+      response.status(HTTP_STATUS.CREATED).json({ id: user?.id, email })
     } catch (e) {
       winstonLogger.error(' Fail to return user email', JSON.stringify(request.decoded))
 

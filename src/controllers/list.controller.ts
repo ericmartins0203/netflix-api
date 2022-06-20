@@ -69,9 +69,9 @@ class ListController {
         throw new UnauthorizedException()
       }
 
-      const removed = await listService.remove(+showId, user)
+      await listService.remove(+showId, user)
 
-      return res.json(removed)
+      return res.json()
     } catch (e) {
       winstonLogger.error(`Fail to remove show: ${JSON.stringify(req.decoded)}`)
 

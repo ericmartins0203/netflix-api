@@ -12,9 +12,9 @@ class ShowService {
   }
 
    /**
-   * Retorna todos o show
+   * Return all shows
    *
-   * @returns Retorna todos o show
+   * @returns Return all shows
    *
    * @beta
    */
@@ -23,10 +23,10 @@ class ShowService {
   }
 
   /**
-   * Recebe um id e retorna um show
+   * receive id and return the show
    * @param id
    *
-   * @returns Retorna um show
+   * @returns Return the show
    *
    * @beta
    */
@@ -37,33 +37,48 @@ class ShowService {
       console.log(show)
       return show
     }
-    console.log('out')
 
     throw new NotFoundException(`The show id: ${id} not found`)
   }
 
   /**
-   * Cria um show
+   * Create show
    *
-   * @returns O show criado
+   * @returns return the show created
    *
    */
-  create (show: Show) : Promise<Show> {
+  async create (show: Show) : Promise<Show> {
+    const alreadyExists = await this.showRepository.findOne({ where: { title: show.title } })
+
+    if (alreadyExists) {
+      throw new NotFoundException(`Show with title ${show.title} already exists`)
+    }
+
     return this.showRepository.save(show)
   }
 
   /**
-   * Deleta um show por id
+   * Delete show by id
    * @param id
    *
-   * @returns o show deletado
+   * @returns the show deleted
    *
    * @beta
    */
-   async delete (id: number) {
+  async delete (id: number) {
     const show = await this.showRepository.delete(id)
 
     if (show.affected) {
+      return show
+    }
+
+    throw new NotFoundException(`O show id: ${id} não foi encontrado`)
+  }
+
+  async episodes (id: number) {
+    const show = await this.showRepository.findOne({ where: { id } })
+
+    if (show) {
       return show
     }
 

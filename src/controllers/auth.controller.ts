@@ -12,21 +12,6 @@ class AuthController {
 
     try {
       const authenticated = await authService.login(email, password)
-
-      response.json(authenticated)
-    } catch (e) {
-      winstonLogger.error(`Fail to login: ${JSON.stringify({ email })}`)
-
-      response.errorHandler && response.errorHandler(e)
-    }
-  }
-
-  public static async refreshToken (request: Request, response: CustomResponse) {
-    const { email, password } = request.body
-
-    try {
-      const authenticated = await authService.login(email, password)
-
       response.json(authenticated)
     } catch (e) {
       winstonLogger.error(`Fail to login: ${JSON.stringify({ email })}`)

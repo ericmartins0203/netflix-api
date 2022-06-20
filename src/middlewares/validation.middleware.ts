@@ -6,12 +6,13 @@ import { CustomResponse } from "../interfaces"
 
 const validationMiddleware = (schema: Schema) => async (req: Request, res: CustomResponse, next: NextFunction) => {
   try {
-    const validated = await schema.validateAsync(req.body, {
+    console.log('entrou')
+    const validated = schema.validate(req.body, {
       abortEarly: false
     })
 
     if (validated.error) {
-      throw new ValidationException("Campos inválidos", validated.error?.details)
+      throw new ValidationException("Campos inválidos", validated.error?.details.map(item => item.message))
     }
 
     next()

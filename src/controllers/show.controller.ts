@@ -3,9 +3,10 @@ import { Request } from "express"
 import HTTP_STATUS from "../enums/http-status.enums"
 import logger from "../infrastructure/logger/logger"
 import { CustomResponse } from "../interfaces"
-import { ShowService } from "../services"
+import { EpisodeService, ShowService } from "../services"
 
 const showService = new ShowService()
+const episodeService = new EpisodeService()
 const winstonLogger = logger({ controller: "ShowController" })
 
 class ShowController {
@@ -52,6 +53,18 @@ class ShowController {
       response.json(shows)
     } catch (e) {
       winstonLogger.error(' Fail to delete shows: ', JSON.stringify(request.params.id))
+      response.errorHandler && response.errorHandler(e)
+    }
+  }
+
+  public static async allEpisodes (request: Request, response: CustomResponse) {
+    try {
+      const { params: { id } } = request
+      const episodes = await episodeService.episodes(+id)
+
+      response.json(episodes)
+    } catch (e) {
+      winstonLogger.error(' Fail to list the episodes: ', JSON.stringify(request.params.id))
       response.errorHandler && response.errorHandler(e)
     }
   }

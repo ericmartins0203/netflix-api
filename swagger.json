@@ -1,0 +1,149 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Netflix api",
+    "description": "This is an API REst made in Nodejs to save, list and other things with movies and series.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/user": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Create user",
+        "description": "A route to register user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InputUser"
+              },
+              "example": {
+                "name": "John",
+                "email": "john@mail.com"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/UserResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "User already exists."
+            }
+          }
+        }
+      }
+    },
+    "/me": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get user",
+        "description": "A route to get user",
+        "responses": {
+          "200": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/UserResponse"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Missing authorization headers."
+            }
+          }
+        }
+      },
+    "/auth":{
+      "post": {
+        "tags": ["User"],
+        "summary": "Login user",
+        "description": "A route to login user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InputUser"
+                }
+              }
+            }
+          },
+        "responses": {
+          "200": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Token"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "User already exists."
+            }
+          }
+      }
+    }
+  },
+  "components":{
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas":{
+      "InputUser":{
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "UserResponse":{
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "Token":{
+        "type": "object",
+        "properties": {
+          "Token": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

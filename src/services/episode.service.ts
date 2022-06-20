@@ -1,22 +1,18 @@
 import { Repository } from "typeorm"
-import winston from "winston"
 
 import { AppDataSource } from "../infrastructure/database/data-source"
 import { Episode, Show } from "../entities"
 import { BadRequestException } from "../exceptions"
-import logger from "../infrastructure/logger/logger"
 
 type CreateEpisodeDTO = Omit<Episode, 'id'> & { showId: number }
 
 class EpisodeService {
   private episodeRepository: Repository<Episode>
   private showRepository: Repository<Show>
-  private logger: winston.Logger
 
   constructor () {
     this.episodeRepository = AppDataSource.getRepository(Episode)
     this.showRepository = AppDataSource.getRepository(Show)
-    this.logger = logger()
   }
 
   async create (episode: CreateEpisodeDTO): Promise<Episode> {
@@ -27,6 +23,12 @@ class EpisodeService {
       throw new BadRequestException(`Show with id ${showId} not found`)
     }
 
+    const alreadyExists = await this.episodeRepository.findOne({ where: { title: episode.title } })
+
+    if (alreadyExists) {
+      throw new BadRequestException(`Episode with title ${episode.title} already exists`)
+    }
+
     const createEpisode = await this.episodeRepository.save(episode)
 
     show.episodes = [...show.episodes, createEpisode]
@@ -34,6 +36,16 @@ class EpisodeService {
     await this.showRepository.save(show)
 
     return createEpisode
+  }
+
+  async episodes (showId: number): Promise<Episode[]> {
+    const show = await this.showRepository.findOne({ where: { id: showId } })
+
+    if (!show) {
+      throw new BadRequestException(`Show with id ${showId} not found`)
+    }
+
+    return show.episodes
   }
 }
 

@@ -15,4 +15,6 @@ showRouter.post('/shows', validateAuthToken, validationMiddleware(CreateShow), S
 
 showRouter.delete("/shows/:id", validateAuthToken, ShowController.delete)
 
+showRouter.get('/shows/:id/episodes', validateAuthToken, ShowController.allEpisodes)
+
 export default showRouter
